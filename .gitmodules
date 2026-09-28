@@ -1,3 +1,6 @@
 [submodule "laundry_app"]
 	path = laundry_app
 	url = https://github.com/helnabawy/laundry_app.git
+[submodule "laundry_admin"]
+	path = laundry_admin
+	url = https://github.com/helnabawy/laundry_admin.git
