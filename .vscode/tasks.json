@@ -84,6 +84,18 @@
       "problemMatcher": []
     },
     {
+      "label": "app: live API tests",
+      "detail": "The app's real API data sources against the running admin backend (start \"admin: dev server\" first)",
+      "type": "shell",
+      "command": "flutter test test/api_live",
+      "options": {
+        "cwd": "${workspaceFolder}/laundry_app",
+        "env": { "LAUNDRY_API_URL": "http://localhost:3000" }
+      },
+      "group": "test",
+      "problemMatcher": []
+    },
+    {
       "label": "app: pub get",
       "detail": "Fetch Flutter packages",
       "type": "shell",
