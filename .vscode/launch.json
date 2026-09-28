@@ -1,0 +1,101 @@
+{
+  // Run and debug the platform from the umbrella repo.
+  //
+  //   Admin: portal + API        Next.js on http://localhost:3000 (starts Postgres first)
+  //   App: …                     Flutter app, against the in-app mock or the real admin API
+  //   Admin + App (…)            both at once; stopping one stops both
+  //
+  // Mobile logins while DEV_OTP_CODE=1234 (laundry_admin/.env):
+  //   customer +971501234567 · drivers +971500000001 / +971500000002
+  // Portal logins: see laundry_admin/README.md.
+  "version": "0.2.0",
+  "configurations": [
+    // ---- Admin portal + mobile API (Next.js) --------------------------------
+    {
+      "name": "Admin: portal + API",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "pnpm dev",
+      "cwd": "${workspaceFolder}/laundry_admin",
+      "preLaunchTask": "admin: prepare",
+      "serverReadyAction": {
+        "pattern": "- Local:\\s+(https?://\\S+)",
+        "uriFormat": "%s/login",
+        "action": "openExternally"
+      }
+    },
+    {
+      "name": "Admin: debug in Chrome",
+      // Client-side debugging; start "Admin: portal + API" first
+      "type": "chrome",
+      "request": "launch",
+      "url": "http://localhost:3000/orders",
+      "webRoot": "${workspaceFolder}/laundry_admin"
+    },
+
+    // ---- Mobile app (Flutter) -------------------------------------------------
+    {
+      "name": "App: mock backend",
+      // The app's built-in mock data; no admin server needed
+      "type": "dart",
+      "request": "launch",
+      "cwd": "${workspaceFolder}/laundry_app",
+      "program": "lib/main.dart"
+    },
+    {
+      "name": "App: real API (iOS simulator / macOS)",
+      "type": "dart",
+      "request": "launch",
+      "cwd": "${workspaceFolder}/laundry_app",
+      "program": "lib/main.dart",
+      "toolArgs": [
+        "--dart-define=USE_MOCK_API=false",
+        "--dart-define=API_BASE_URL=http://localhost:3000"
+      ]
+    },
+    {
+      "name": "App: real API (Android emulator)",
+      // 10.0.2.2 is the host machine as seen from the emulator
+      "type": "dart",
+      "request": "launch",
+      "cwd": "${workspaceFolder}/laundry_app",
+      "program": "lib/main.dart",
+      "toolArgs": [
+        "--dart-define=USE_MOCK_API=false",
+        "--dart-define=API_BASE_URL=http://10.0.2.2:3000"
+      ]
+    },
+    {
+      "name": "App: real API (physical device on Wi-Fi)",
+      // Phone and computer on the same network; asks for the computer's IP
+      "type": "dart",
+      "request": "launch",
+      "cwd": "${workspaceFolder}/laundry_app",
+      "program": "lib/main.dart",
+      "toolArgs": [
+        "--dart-define=USE_MOCK_API=false",
+        "--dart-define=API_BASE_URL=http://${input:hostIp}:3000"
+      ]
+    }
+  ],
+  "compounds": [
+    {
+      "name": "Admin + App (iOS simulator)",
+      "configurations": ["Admin: portal + API", "App: real API (iOS simulator / macOS)"],
+      "stopAll": true
+    },
+    {
+      "name": "Admin + App (Android emulator)",
+      "configurations": ["Admin: portal + API", "App: real API (Android emulator)"],
+      "stopAll": true
+    }
+  ],
+  "inputs": [
+    {
+      "id": "hostIp",
+      "type": "promptString",
+      "description": "This computer's LAN IP (macOS: `ipconfig getifaddr en0`)",
+      "default": "192.168.1.16"
+    }
+  ]
+}

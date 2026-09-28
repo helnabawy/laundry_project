@@ -1,0 +1,102 @@
+{
+  // Tasks for running the platform locally. Used by launch.json, or run them
+  // yourself with "Tasks: Run Task".
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "admin: database up",
+      "detail": "Start Postgres (Docker) for the admin portal and API",
+      "type": "shell",
+      "command": "docker compose up -d --wait",
+      "options": { "cwd": "${workspaceFolder}/laundry_admin" },
+      "presentation": { "reveal": "silent", "panel": "shared" },
+      "problemMatcher": []
+    },
+    {
+      "label": "admin: migrate",
+      "detail": "Apply pending database migrations",
+      "type": "shell",
+      "command": "pnpm prisma migrate deploy",
+      "options": { "cwd": "${workspaceFolder}/laundry_admin" },
+      "dependsOn": "admin: database up",
+      "presentation": { "reveal": "silent", "panel": "shared" },
+      "problemMatcher": []
+    },
+    {
+      "label": "admin: prepare",
+      "detail": "Database up + migrations (runs before every admin launch)",
+      "dependsOn": "admin: migrate",
+      "problemMatcher": []
+    },
+    {
+      "label": "admin: seed demo data",
+      "detail": "Catalogue, accounts and ~6 weeks of demo orders (skips orders if some exist)",
+      "type": "shell",
+      "command": "pnpm db:seed:demo",
+      "options": { "cwd": "${workspaceFolder}/laundry_admin" },
+      "dependsOn": "admin: migrate",
+      "problemMatcher": []
+    },
+    {
+      "label": "admin: reset database",
+      "detail": "DESTRUCTIVE: drop all data, re-migrate and re-seed demo data",
+      "type": "shell",
+      "command": "pnpm db:reset",
+      "options": { "cwd": "${workspaceFolder}/laundry_admin" },
+      "dependsOn": "admin: database up",
+      "problemMatcher": []
+    },
+    {
+      "label": "admin: dev server",
+      "detail": "Next.js dev server on http://localhost:3000 (portal + mobile API)",
+      "type": "shell",
+      "command": "pnpm dev",
+      "options": { "cwd": "${workspaceFolder}/laundry_admin" },
+      "dependsOn": "admin: prepare",
+      "isBackground": true,
+      "presentation": { "reveal": "always", "panel": "dedicated" },
+      "problemMatcher": {
+        "owner": "nextjs",
+        "pattern": { "regexp": "^\\s*⨯ (.*)$", "message": 1 },
+        "background": {
+          "beginsPattern": "next dev",
+          "endsPattern": "Ready in"
+        }
+      }
+    },
+    {
+      "label": "admin: tests",
+      "detail": "Unit tests (Vitest)",
+      "type": "shell",
+      "command": "pnpm test",
+      "options": { "cwd": "${workspaceFolder}/laundry_admin" },
+      "group": "test",
+      "problemMatcher": []
+    },
+    {
+      "label": "admin: e2e tests",
+      "detail": "Playwright end-to-end (starts the dev server if it isn't running)",
+      "type": "shell",
+      "command": "pnpm test:e2e",
+      "options": { "cwd": "${workspaceFolder}/laundry_admin" },
+      "dependsOn": "admin: prepare",
+      "group": "test",
+      "problemMatcher": []
+    },
+    {
+      "label": "app: pub get",
+      "detail": "Fetch Flutter packages",
+      "type": "shell",
+      "command": "flutter pub get",
+      "options": { "cwd": "${workspaceFolder}/laundry_app" },
+      "problemMatcher": []
+    },
+    {
+      "label": "app: open iOS simulator",
+      "detail": "Boot the iOS Simulator",
+      "type": "shell",
+      "command": "open -a Simulator",
+      "problemMatcher": []
+    }
+  ]
+}
