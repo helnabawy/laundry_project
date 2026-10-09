@@ -4,3 +4,6 @@
 [submodule "laundry_admin"]
 	path = laundry_admin
 	url = https://github.com/helnabawy/laundry_admin.git
+[submodule "laundry_landing"]
+	path = laundry_landing
+	url = https://github.com/helnabawy/laundry_landing.git

@@ -8,6 +8,7 @@ here as a [git submodule](https://git-scm.com/book/en/v2/Git-Tools-Submodules).
 | ---------------- | ----------------------------------------------------------------------- | -------------------------------------------------------------------------- |
 | `laundry_app/`   | [helnabawy/laundry_app](https://github.com/helnabawy/laundry_app)       | Flutter mobile app for **Customers** and **Drivers** (role-based routing). |
 | `laundry_admin/` | [helnabawy/laundry_admin](https://github.com/helnabawy/laundry_admin)   | Web **Admin Portal** for staff and facility operators.                     |
+| `laundry_landing/` | [helnabawy/laundry_landing](https://github.com/helnabawy/laundry_landing) | Public **landing page** (Astro, EN + AR) in the app's Care Label identity. |
 
 See [PRODUCT.md](PRODUCT.md) for users, platforms, and product context.
 
