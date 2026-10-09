@@ -69,6 +69,18 @@ slots offered; in the shop flow VIP is also a visible cart-level surcharge.
 - **Auth:** phone (UAE format `5X XXX XXXX`) + 4-digit OTP, then profile completion
   with a first pickup address. Session expiry on 401 sends the user back to login
   with an explanation.
+- **Choosing a laundry:** several laundries can run on the platform, each with its
+  own catalogue, prices, service levels, time slots and drivers. A customer picks
+  one after sign-in, and the choice is skipped when only one laundry exists. Home
+  shows "Ordering from …" with a Change action. Switching empties the cart, after
+  confirming, because prices differ between laundries. A reorder switches back to
+  the laundry that handled the original order. Drivers never choose: they belong
+  to one laundry.
+- **Staying current:** order status changes arrive as push notifications (Firebase).
+  A notification refreshes the screens showing that order, and tapping it opens the
+  order, or the task for a driver. While the shop is open, a laundry's price edits
+  refresh it silently. Every list also supports pull-to-refresh, and the app
+  refetches when it returns to the foreground after 30 seconds or more.
 - **Customer flow — shop path:** Home ("Shop our products" / the Products tab) →
   flat product grid with category filter chips → cart (quantities, running
   subtotal) → 2-step checkout (VIP toggle + payment method, with a live,
@@ -143,7 +155,7 @@ slots offered; in the shop flow VIP is also a visible cart-level surcharge.
   must be added deliberately and declared in `pubspec.yaml`.
 - **Maps:** no map SDK is integrated — `map_placeholder.dart` is a stand-in and
   navigation hands off to the system Maps app via `url_launcher`.
-- **Not built yet:** Admin Portal, auto-dispatch, push notifications, real payments
+- **Not built yet:** auto-dispatch, real payments
   (card payment opens an external browser), address geocoding.
 
 ## Brand Commitments
